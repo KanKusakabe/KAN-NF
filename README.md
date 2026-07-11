@@ -29,4 +29,10 @@
 | [HoloAssist-NF](https://kankusakabe.github.io/HoloAssist-NF/) | 手順の逐次 | 介入予兆 AUC≈0.57 |
 | [AI2-THOR-RoomR](https://kankusakabe.github.io/AI2-THOR-RoomR/) | シミュ配置 | 移動物検出 AUC=0.94 |
 
+### 逆設計・空間 × 見守り（尤度を設計目的関数に／長期の“普通”）
+| プロジェクト | データ | 主な結果 |
+|---|---|---|
+| [Layout-NF](https://kankusakabe.github.io/Layout-NF/) | TRUMANS 室内動作+占有グリッド | 配置検出 AUC0.92(未知シーン0.84)／家具の逆設計・反実 |
+| [CASAS-NF](https://kankusakabe.github.io/CASAS-NF/) | CASAS 在宅センサ列 | 17ヶ月ドリフト／個人化は~300日で集団を超える |
+
 ページ本体は `docs/index.html`。リンクを増やす時はここを編集。
