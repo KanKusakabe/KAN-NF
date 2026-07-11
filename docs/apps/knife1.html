@@ -1,0 +1,47 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>刃① 事故の責任・認証を『数字』で語る · KAN-NF 応用 — 5本の刃</title>
+<style>
+:root{--acc:#c2410c;--acc2:#d97757;--ink:#222;--mut:#666;--bg:#faf8f5}
+*{box-sizing:border-box}
+body{font:16px/1.75 -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);
+ max-width:960px;margin:0 auto;padding:2rem 1rem}
+a{color:var(--acc)}
+h1{line-height:1.35;margin:.2rem 0}
+.sub{color:var(--mut)}
+.crumb{font-size:.9rem;margin-bottom:1rem}
+.kpis{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.2rem 0}
+.kpi{background:#f5f3f0;border-radius:12px;padding:.7rem 1rem;min-width:120px}
+.kpi b{display:block;font-size:1.5rem;color:var(--acc)}
+.kpi span{font-size:.8rem;color:var(--mut)}
+section{margin:2rem 0}
+h2{border-left:5px solid var(--acc2);padding-left:.6rem;font-size:1.25rem}
+figure{margin:1.4rem 0}
+img{width:100%;border:1px solid #e5e5e5;border-radius:10px;background:#fff}
+figcaption{color:#555;margin-top:.4rem;font-size:.92rem}
+.interp{background:var(--bg);border-left:3px solid var(--acc2);padding:.8rem 1rem;border-radius:0 8px 8px 0}
+code{background:#f0eee9;padding:.1rem .35rem;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid #e5e5e5;padding:.4rem .6rem;text-align:left;font-size:.94rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem;margin-top:1.5rem}
+.card{border:1px solid #e5e5e5;border-radius:12px;padding:1rem;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--acc2)}
+.card h3{margin:.1rem 0 .3rem}
+.badge{display:inline-block;font-size:.72rem;padding:.1rem .5rem;border-radius:999px;background:#eee;color:#555}
+.badge.done{background:#e7f3e7;color:#256b25}
+.badge.hold{background:#fdeecd;color:#8a5a00}
+</style></head><body>
+<div class="crumb"><a href="index.html">&larr; KAN-NF 応用 — 5本の刃 トップ</a></div>
+<h1>刃① 事故の責任・認証を『数字』で語る</h1>
+<p class="sub">車の合図に対する歩行者ステップ確率を校正して出し、反実で『合図を消すと確率が何%上がるか』を答える（eHMI）</p>
+<div class="kpis"><div class="kpi"><b>0.017</b><span>校正ECE</span></div><div class="kpi"><b>0.959</b><span>識別AUROC</span></div><div class="kpi"><b>-3.2pp</b><span>反実ΔP(平均)</span></div><div class="kpi"><b>29.8%</b><span>|ΔP|&gt;5pp の割合</span></div></div>
+<section><h2>1. このデータは何か</h2><b>eHMI</b>（TU Delft coupled simulator, 20セッション395試行, 122k step）。各stepに歩行者の瞬間移動(dfwd/dlat)、車との距離rng・接近率appr・TTC・方位、そして車の合図 <code>eHMI∈{None,Left,Right}</code>。学習はセッション1–16、検証はセッション17–20（held-out）。</section>
+<section><h2>2. 何を・どう学習したか</h2>条件付き Normalizing Flow（zuko NSF）で <b>log p(歩行者移動 | 車の状態, eHMI合図)</b> を学習。そこから前方ステップ閾値 τ=0.06 を超える確率 <b>P(step | 文脈)</b> をサンプリングで推定＝『飛び出しやすさ』の校正確率。<b>反実</b>は文脈の eHMI を実際の合図→None に差し替えて再評価し ΔP を測る。</section>
+<section><h2>3. 結果</h2>held-out で校正良好（<b>ECE=0.017</b>、対角線にほぼ一致）＝『◯%と言えば本当に◯%』。予測確率は事象を強く識別（<b>AUROC=0.959</b>）。反実（合図→None）の平均効果は <b>-3.2pp</b>（このシミュレータでは合図が前方ステップを抑える方向には出ず、むしろ僅かに増）。ただし効果は文脈依存で <b>|ΔP|&gt;5pp の場面が 29.8%</b> 存在＝『どの場面で合図が効く/逆効果か』を校正済み確率で個別に言える。
+<figure><img src="figures/k1_calibration.png" alt="信頼度図：予測ステップ確率 vs 実測頻度（対角線＝完全校正）"><figcaption>信頼度図：予測ステップ確率 vs 実測頻度（対角線＝完全校正）</figcaption></figure>
+<figure><img src="figures/k1_counterfactual.png" alt="反実：合図を消したときのステップ確率変化ΔPの分布（0付近＝小、裾＝効く場面）"><figcaption>反実：合図を消したときのステップ確率変化ΔPの分布（0付近＝小、裾＝効く場面）</figcaption></figure></section>
+<section><h2>4. 図の見方</h2><b>左</b>＝信頼度図。予測確率(横)と実測頻度(縦)が対角線に乗るほど『8%と言ったら本当に8%』＝法廷・認証で使える数字。<b>右</b>＝反実効果ΔPの分布。0付近＝合図の有無で変わらない場面、裾＝合図が大きく効く（または逆効果の）場面。</section>
+<section><h2>5. 解釈と意味・使い道</h2><div class="interp">ただの予測ではなく<b>校正された確率＋反実</b>なので、効果の符号や大きさをデータから正直に読める（ここでは平均効果は小＝この合図は万能でない）。この機構は「この合図・このタイミングでの飛び出し確率は◯%」「0.5秒早ければ◯%→◯%」という<b>責任按分・型式認証・合図仕様</b>の数字に使える。実交通への一般化は PIE / Euro-PVI で追試予定（刃④と接続）。</div></section>
+<p class="sub" style="margin-top:2rem">条件付き Normalizing Flow（zuko NSF）で自動生成。
+NF×生活データ探索シリーズの一部。</p>
+</body></html>
