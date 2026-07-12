@@ -38,6 +38,8 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
 <span class="lenschip">サプライズ = −log p（異常/忘却/ミス）</span>
 <span class="lenschip">迷い = 予測エントロピー（分岐/意思決定）</span>
 <span class="lenschip">反実生成（本来どう動くべきか）</span>
+<p style="margin:.7rem 0 0;font-size:.85rem;color:var(--mut)">
+指標の読み方：<b>NLL</b>（負の対数尤度）は<b>低いほど</b>データによく当てはまる／<b>AUC・AUROC</b>は0.5が偶然・1.0が完全／<b>相関 ρ・r</b>は±1が完全・0が無関係。各カードの数値は「勝ち負け」ではなく密度モデルの特性の差として読んでください。</p>
 </div>
 
 <h2>NF × 人間データ 探索シリーズ <span class="n">— 迷い（予測エントロピー）＋ 反実生成 の2レンズ</span></h2>
@@ -46,14 +48,14 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
   <a class="card" href="https://kankusakabe.github.io/THOR-MAGNI/">
     <h3>THÖR-MAGNI</h3>
     <p>屋内歩行者軌跡 → <b>屋内の迷い地図</b>・分岐 vs 一本道の生成。</p>
-    <div class="tags"><span class="tag win">最強の検証</span><span class="tag">迷い地図</span><span class="tag">導線設計</span></div>
+    <div class="tags"><span class="tag">代表的な検証</span><span class="tag">迷い地図</span><span class="tag">導線設計</span></div>
     <div class="metric">迷い↔実分岐 <b>ρ=0.77</b>（出入口/隅で分岐、中央は一本道）</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/Rehab-NF/">
     <h3>Rehab-NF <span style="font-size:.7rem">（KIMORE）</span></h3>
     <p>リハビリ動作（Kinect骨格・臨床群ラベル）→ <b>運動障害の検出</b>・コーチング。</p>
-    <div class="tags"><span class="tag new">新規</span><span class="tag win">臨床GT</span><span class="tag">サプライズ</span><span class="tag">反実</span></div>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">臨床ラベル</span><span class="tag">サプライズ</span><span class="tag">反実</span></div>
     <div class="metric">健常のみ学習で <b>脳卒中 AUC=0.69</b> / 腰痛0.52（＝運動麻痺は検出・痛みは非検出）</div>
   </a>
 
@@ -99,9 +101,9 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
 
   <a class="card" href="https://kankusakabe.github.io/HD-EPIC-NF/">
     <h3>HD-EPIC-NF</h3>
-    <p>実キッチンの3D配置＋視線 → <b>置き忘れの予言</b>。多峰でFlowがGMMに明確勝ち。</p>
-    <div class="tags"><span class="tag win">Flow&gt;GMM</span><span class="tag">配置</span><span class="tag">視線</span></div>
-    <div class="metric">NLL <b>1.03&lt;1.25</b>／視線離れ配置ほど高サプライズ</div>
+    <p>実キッチンの3D配置＋視線 → <b>置き忘れの予言</b>。多峰な配置分布では Flow の方が低NLL。</p>
+    <div class="tags"><span class="tag">Flow と GMM の比較</span><span class="tag">配置</span><span class="tag">視線</span></div>
+    <div class="metric">NLL <b>1.03 &lt; 1.25</b>（Flow &lt; GMM、低いほど当てはまりが良い）／視線離れ配置ほど高サプライズ</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/HoloAssist-NF/">
@@ -150,21 +152,21 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
     <h3>CASAS-NF</h3>
     <p>在宅センサ列（CASAS）→ <b>SURPRISE=−log p</b> で認知・エラー・生活ドリフトを教師なし検出。個人化がいつ効くかを定量化。</p>
     <div class="tags"><span class="tag new">新規</span><span class="tag">見守り</span><span class="tag">ドリフト</span><span class="tag">個人化</span></div>
-    <div class="metric">17ヶ月ドリフト追跡／個人化は<b>~300日</b>で集団を超える（学習認識フェーディング）</div>
+    <div class="metric">17ヶ月ドリフト追跡／個人化モデルは<b>~300日</b>で集団平均モデルに追いつく（クロスオーバー）</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/MERL-NF/">
     <h3>MERL-NF</h3>
     <p>オフィスのモーションセンサ1年分 → <b>p(一歩の遷移｜文脈)</b> で廊下の利用・遊休を可視化し、配置候補を尤度でスコア（<b>設計感度</b>）＋不自然な動きを異常検知。Layout-NFの空間利用版。</p>
-    <div class="tags"><span class="tag new">新規</span><span class="tag win">設計感度 PASS</span><span class="tag">利用解析</span><span class="tag">異常</span></div>
-    <div class="metric">NLL <b>−4.34</b>（&lt;GMM/Markov/ガウス）／目的地1.5×で<b>−10.1 nats</b>・回復速度1.64 m/s／テレポート検出 <b>AUC 0.991</b></div>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">設計感度チェック</span><span class="tag">利用解析</span><span class="tag">異常</span></div>
+    <div class="metric">NLL <b>−4.34</b>（GMM/Markov/ガウスより低い＝当てはまりが良い）／目的地1.5×で <b>−10.1 nats</b>・回復速度1.64 m/s／テレポート検出 AUC <b>0.991</b>（0.5=偶然, 1=完全）</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/UI-NF/">
     <h3>UI-NF <span class="n">— ネガティブ結果</span></h3>
     <p>迷いレンズを <b>UI画面上の視線</b> に移し「出荷前の迷わせ度採点」を試みたが<b>転移しない</b>。境界の記録：予測エントロピー＝迷いが効くのは環境が挙動を拘束する場に限る。</p>
     <div class="tags"><span class="tag">境界</span><span class="tag">ネガティブ結果</span><span class="tag">視線</span><span class="tag">UEyes/UICrit</span></div>
-    <div class="metric">scanpath NLL 3.42（&lt;GMM/ガウス）だが 迷い×品質 <b>ρ=−0.03</b>／bbox局在 AUC 0.43／画面はほぼ効かず（screen-NF≈scalar-NF）</div>
+    <div class="metric">scanpath NLL 3.42（GMM/ガウスより低い＝当てはまりは良い）だが 迷い×品質 <b>ρ=−0.03</b>（≒0＝無関係）／bbox局在 AUC 0.43（0.5未満＝偶然以下）／画面はほぼ効かず（screen-NF≈scalar-NF）</div>
   </a>
 
 </div>
@@ -178,22 +180,36 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
   <a class="card" href="https://kankusakabe.github.io/DesirePath-NF/">
     <h3>DesirePath-NF <span class="n">— けもの道</span></h3>
     <p>屋外の自由歩行（ETH/UCY）→ <b>p(一歩｜位置・目的地)</b>。「まっすぐ目的地」からの系統的偏差＝<b>けもの道の芽</b>とサプライズ地図を読み出す。</p>
-    <div class="tags"><span class="tag new">新規</span><span class="tag win">構造条件が有効</span><span class="tag">逆設計</span><span class="tag">歩行者</span></div>
-    <div class="metric">LOSO NLL <b>0.85</b>（位置ブラインド0.97・直進3.50・ガウス3.08）／desire×直進の偏差 <b>~40°</b></div>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">構造条件が有効</span><span class="tag">逆設計</span><span class="tag">歩行者</span></div>
+    <div class="metric">LOSO NLL <b>0.85</b>（低いほど当てはまりが良い。対照: 位置ブラインド0.97・直進3.50・ガウス3.08）／desire×直進の偏差 <b>~40°</b></div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/CityFlow-NF/">
     <h3>CityFlow-NF <span class="n">— 都市回遊・立地</span></h3>
     <p>チェックイン列（Gowalla・Stockholm）→ <b>p(次の場所｜文脈)</b>＝需要密度。会場を隠して位置を当て、需要−供給ギャップで<b>出店候補</b>を逆設計。</p>
     <div class="tags"><span class="tag new">新規</span><span class="tag">立地</span><span class="tag">逆設計</span><span class="tag">NF≈KDE</span></div>
-    <div class="metric">立地復元 <b>AUC 0.918</b>（KDE 0.926＝NFはKDEを超えず）／文脈のNLL寄与は僅少（正直な対照）</div>
+    <div class="metric">立地復元 <b>AUC 0.918</b>（0.5=偶然, 1=完全。KDE 0.926 と同程度＝NF固有の優位は無い）／文脈のNLL寄与は僅少（正直な対照）</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/RouteDev-NF/">
     <h3>RouteDev-NF <span class="n">— ナビ逸脱／一部ネガティブ</span></h3>
     <p>ポルトのタクシー→ <b>p(一歩｜位置・目的地)</b>。最短経路からの逸脱を検出し、タクシーから道路網を復元。ルーター再現は<b>負の結果</b>。</p>
-    <div class="tags"><span class="tag new">新規</span><span class="tag win">逸脱検知</span><span class="tag">境界</span><span class="tag">ネガティブ結果</span></div>
-    <div class="metric">NLL <b>−0.01</b>（≪直進+2.9）／遠回り検知 <b>AUC 0.834</b>／NF補正ルーターは F1 0.111→0.040 と悪化＝IRL が要る</div>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">逸脱検知</span><span class="tag">境界</span><span class="tag">ネガティブ結果</span></div>
+    <div class="metric">NLL <b>−0.01</b>（直進+2.9 より低い＝当てはまりが良い）／遠回り検知 <b>AUC 0.834</b>（0.5=偶然）／NF補正ルーターは F1 0.111→0.040 に低下＝この設定では改善せず（IRL が要る）</div>
+  </a>
+
+</div>
+
+<h2>群衆 × 前触れの境界 <span class="n">— 回避・急機動を尤度で読み、どこで前触れになるかを分ける</span></h2>
+<p class="sub" style="margin:.3rem 0 0">
+群衆の中での回避・急機動を条件付き Flow の尤度で読む。<b>急機動には前触れがある一方、日常的な予期的回避は幾何量が担い尤度サプライズは効かない</b>という境界を、3つの実データで切り分けて報告する。</p>
+<div class="cards">
+
+  <a class="card" href="https://kankusakabe.github.io/Crowd-NF/">
+    <h3>Crowd-NF <span class="n">— 群衆下の回避・急機動</span></h3>
+    <p>Dryad 交錯歩行 と Lyon 光の祭典（最大4人/m²）→ <b>p(次の一歩｜履歴・近傍・密度)</b>。回避の較正確率・反実（混雑）と、急機動の前触れ検知を扱う。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">群衆</span><span class="tag">前触れ</span><span class="tag">反実</span></div>
+    <div class="metric">混雑→回避 <b>+6.3pp</b>（反実、pp=パーセントポイント）／急機動の前触れ AUROC <b>0.69</b>（0.5=偶然。Lyon）／日常回避は幾何量が担い尤度は先行せず（Dryad）</div>
   </a>
 
 </div>
@@ -208,14 +224,14 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
     <h3>Assembly101-NF <span class="n">— 離散</span></h3>
     <p>玩具組立の「次の手」を <b>離散尤度</b> で。順序・位置ミスを検知し、<b>correction を反事実</b>として推奨。</p>
     <div class="tags"><span class="tag new">新規</span><span class="tag">離散手順</span><span class="tag">反実</span><span class="tag">対:連続</span></div>
-    <div class="metric">ミス検知 AUROC 自己回帰 <b>0.80</b>／遷移カウント 0.84／同トークンに連続NFは0.63・その差 −0.17〜0.21／反実 top-5 0.34</div>
+    <div class="metric">ミス検知 AUROC（0.5=偶然）自己回帰 <b>0.80</b>／遷移カウント 0.84／同トークンに連続NFは0.63（離散モデルより 0.17〜0.21 低い＝この信号では離散が向く）／反実 top-5 0.34</div>
   </a>
 
   <a class="card" href="https://kankusakabe.github.io/CaptainCook4D-NF/">
     <h3>CaptainCook4D-NF <span class="n">— 連続</span></h3>
     <p>調理の「実行ペース」を <b>連続密度</b> で。ペース系の誤りを検知し、<b>最小修正のペース</b>を反事実として出す。</p>
     <div class="tags"><span class="tag new">新規</span><span class="tag">連続ペース</span><span class="tag">反実</span><span class="tag">対:離散</span></div>
-    <div class="metric">held-out NLL Flow <b>1.43</b> vs ガウス混合 2.24（差 −0.81・連続なので比較可）／誤り検知 録画 0.71・ステップ 0.59</div>
+    <div class="metric">held-out NLL Flow <b>1.43</b>／ガウス混合 2.24（低いほど当てはまりが良い・差 0.81、同じ基底で比較可）／誤り検知 AUROC 録画 0.71・ステップ 0.59（0.5=偶然）</div>
   </a>
 
 </div>
@@ -250,7 +266,7 @@ NFの<b>校正された確率・微分・低尤度</b>を、娯楽でない高�
 <!--APPS-END-->
 
 <footer>
-条件付き Normalizing Flow（zuko NSF）による人間データ探索の統括ページ。各カードは独立したプロジェクトの GitHub Pages。<br>
+条件付き Normalizing Flow（zuko NSF）による人間データ探索の統括ページ。各カードは各プロジェクトの GitHub Pages、または応用ハブ内のページへのリンク。<br>
 自動生成 · KAN-NF
 </footer>
 </body></html>

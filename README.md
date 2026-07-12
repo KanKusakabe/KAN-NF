@@ -39,13 +39,18 @@
 | プロジェクト | データ | 主な結果 |
 |---|---|---|
 | [Layout-NF](https://kankusakabe.github.io/Layout-NF/) | TRUMANS 室内動作+占有グリッド | 配置検出 AUC0.92(未知シーン0.84)／家具の逆設計・反実 |
-| [CASAS-NF](https://kankusakabe.github.io/CASAS-NF/) | CASAS 在宅センサ列 | 17ヶ月ドリフト／個人化は~300日で集団を超える |
+| [CASAS-NF](https://kankusakabe.github.io/CASAS-NF/) | CASAS 在宅センサ列 | 17ヶ月ドリフト／個人化モデルは~300日で集団平均モデルに追いつく（クロスオーバー） |
 
 ### 空間動線 × 逆設計（一般の人の動線が漏らす「望まれた構造」を尤度で読む）
 | プロジェクト | データ | 主な結果 |
 |---|---|---|
 | [DesirePath-NF](https://kankusakabe.github.io/DesirePath-NF/) | ETH/UCY 歩行者軌跡（けもの道） | LOSO NLL 0.85（位置ブラインド0.97・直進3.50）／desire×直進の偏差~40°＝構造条件が有効 |
-| [CityFlow-NF](https://kankusakabe.github.io/CityFlow-NF/) | Gowalla チェックイン（Stockholm・立地） | 立地復元 AUC0.918（KDE0.926＝NFは超えず）／需要−供給ギャップで出店候補を逆設計 |
-| [RouteDev-NF](https://kankusakabe.github.io/RouteDev-NF/) | Porto タクシー（ナビ逸脱） | 逸脱検知 AUC0.834／NF補正ルーターは F1 0.111→0.040 と悪化＝負の結果（IRLが要る） |
+| [CityFlow-NF](https://kankusakabe.github.io/CityFlow-NF/) | Gowalla チェックイン（Stockholm・立地） | 立地復元 AUC0.918（KDE0.926と同程度＝NF固有の優位は無い）／需要−供給ギャップで出店候補を逆設計 |
+| [RouteDev-NF](https://kankusakabe.github.io/RouteDev-NF/) | Porto タクシー（ナビ逸脱） | 逸脱検知 AUC0.834／NF補正ルーターは F1 0.111→0.040 に低下＝この設定では改善せず（IRLが要る） |
+
+### 群衆 × 前触れの境界（回避・急機動を尤度で読む）
+| プロジェクト | データ | 主な結果 |
+|---|---|---|
+| [Crowd-NF](https://kankusakabe.github.io/Crowd-NF/) | Dryad 交錯歩行 / Lyon 光の祭典（〜4人/m²） | 混雑→回避+6.3pp（反実）／急機動の前触れ AUROC0.69（Lyon）／日常回避は幾何量が担い尤度は先行せず（Dryad） |
 
 ページ本体は `docs/index.html`。リンクを増やす時はここを編集。
