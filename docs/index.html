@@ -169,6 +169,35 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
 
 </div>
 
+<h2>空間動線 × 逆設計 <span class="n">— 一般の人の動線が漏らす「望まれた構造」を尤度で読む</span></h2>
+<p class="sub" style="margin:.3rem 0 0">
+人の動線は「与えられた構造(provided：歩道・道路・店の配置)」に従いつつ、<b>“本当はこう動きたい”という望まれた構造(desire)</b>を漏らす。
+条件付き Flow の尤度でその差＝サプライズを測り、反転して構造を<b>逆設計</b>する。効いた所と効かない所を分けて正直に報告。</p>
+<div class="cards">
+
+  <a class="card" href="https://kankusakabe.github.io/DesirePath-NF/">
+    <h3>DesirePath-NF <span class="n">— けもの道</span></h3>
+    <p>屋外の自由歩行（ETH/UCY）→ <b>p(一歩｜位置・目的地)</b>。「まっすぐ目的地」からの系統的偏差＝<b>けもの道の芽</b>とサプライズ地図を読み出す。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag win">構造条件が有効</span><span class="tag">逆設計</span><span class="tag">歩行者</span></div>
+    <div class="metric">LOSO NLL <b>0.85</b>（位置ブラインド0.97・直進3.50・ガウス3.08）／desire×直進の偏差 <b>~40°</b></div>
+  </a>
+
+  <a class="card" href="https://kankusakabe.github.io/CityFlow-NF/">
+    <h3>CityFlow-NF <span class="n">— 都市回遊・立地</span></h3>
+    <p>チェックイン列（Gowalla・Stockholm）→ <b>p(次の場所｜文脈)</b>＝需要密度。会場を隠して位置を当て、需要−供給ギャップで<b>出店候補</b>を逆設計。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">立地</span><span class="tag">逆設計</span><span class="tag">NF≈KDE</span></div>
+    <div class="metric">立地復元 <b>AUC 0.918</b>（KDE 0.926＝NFはKDEを超えず）／文脈のNLL寄与は僅少（正直な対照）</div>
+  </a>
+
+  <a class="card" href="https://kankusakabe.github.io/RouteDev-NF/">
+    <h3>RouteDev-NF <span class="n">— ナビ逸脱／一部ネガティブ</span></h3>
+    <p>ポルトのタクシー→ <b>p(一歩｜位置・目的地)</b>。最短経路からの逸脱を検出し、タクシーから道路網を復元。ルーター再現は<b>負の結果</b>。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag win">逸脱検知</span><span class="tag">境界</span><span class="tag">ネガティブ結果</span></div>
+    <div class="metric">NLL <b>−0.01</b>（≪直進+2.9）／遠回り検知 <b>AUC 0.834</b>／NF補正ルーターは F1 0.111→0.040 と悪化＝IRL が要る</div>
+  </a>
+
+</div>
+
 <h2>離散 × 連続 の対 <span class="n">— 失敗の事前検知と反事実推奨で、向く密度モデルは信号次第</span></h2>
 <p class="sub" style="margin:.3rem 0 0">
 同じ2つの目的（<b>失敗の事前検知</b>＝低尤度／<b>反事実で次の手を推奨</b>）を、手順の<b>離散（順序・トークン）</b>と
