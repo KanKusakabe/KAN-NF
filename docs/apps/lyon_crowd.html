@@ -1,0 +1,75 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⑨ 密群衆の急機動を尤度で先取りする（Lyon 光の祭典） · KAN-NF 応用</title>
+<style>
+:root{--acc:#c2410c;--acc2:#d97757;--ink:#222;--mut:#666;--bg:#faf8f5}
+*{box-sizing:border-box}
+body{font:16px/1.75 -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);
+ max-width:960px;margin:0 auto;padding:2rem 1rem}
+a{color:var(--acc)}
+h1{line-height:1.35;margin:.2rem 0}
+.sub{color:var(--mut)}
+.crumb{font-size:.9rem;margin-bottom:1rem}
+.kpis{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.2rem 0}
+.kpi{background:#f5f3f0;border-radius:12px;padding:.7rem 1rem;min-width:120px}
+.kpi b{display:block;font-size:1.5rem;color:var(--acc)}
+.kpi span{font-size:.8rem;color:var(--mut)}
+section{margin:2rem 0}
+h2{border-left:5px solid var(--acc2);padding-left:.6rem;font-size:1.25rem}
+figure{margin:1.4rem 0}
+img{width:100%;border:1px solid #e5e5e5;border-radius:10px;background:#fff}
+figcaption{color:#555;margin-top:.4rem;font-size:.92rem}
+.interp{background:var(--bg);border-left:3px solid var(--acc2);padding:.8rem 1rem;border-radius:0 8px 8px 0}
+.warn{background:#fdeecd;border-left:3px solid #d0a000;padding:.7rem 1rem;border-radius:0 8px 8px 0;font-size:.94rem}
+code{background:#f0eee9;padding:.1rem .35rem;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid #e5e5e5;padding:.4rem .6rem;text-align:left;font-size:.94rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+</style></head><body>
+<div class="crumb"><a href="index.html">&larr; KAN-NF 応用（尤度を製品にする） トップ</a></div>
+<h1>⑨ 密群衆の急機動を尤度で先取りする（Lyon 光の祭典）</h1>
+<p class="sub">最大4人/m²の実イベント群衆。尤度サプライズが"急な機動"の前に立ち上がるかを検証。Dryadと逆に、ここではサプライズが最良の先行指標になる。</p>
+<div class="kpis">
+<div class="kpi"><b>0.69</b><span>前触れAUROC</span></div>
+<div class="kpi"><b>0.4s</b><span>先行時間</span></div>
+<div class="kpi"><b>&gt;幾何量</b><span>A4でサプライズ最良</span></div>
+<div class="kpi"><b>0.059</b><span>校正ECE</span></div>
+</div>
+
+<section><h2>1. このデータは何か</h2>
+<b>Lyon「Fête des Lumières 2022」密群衆データ</b>（仏独MADRASプロジェクト, Nature Sci Data 2025）。俯瞰追跡 <b>TopView 9シーケンス・30fps・メートル座標</b>、<b>密度〜4人/m²</b>の実イベント。10Hzに再標本化し、<b>1,295人・約15万ステップ</b>を対象（近傍1.5m内 平均8.3人・最大20＝本物の密群衆）。</section>
+
+<div class="warn"><b>データの制約と適応（正直な明記）</b>：付属の <code>contacts.csv</code> は GPS装着 24名の<b>接触"時刻"リスト</b>で、各人の壁時計時刻・別日別時間帯であり、<b>TopView軌跡のID/座標と結合できない</b>。よってDryadのような<b>「この接触の直前」per-event前触れは組めない</b>。そこで①ハプニングは<b>自己教師の"急な横機動"proxy</b>（|横加速|上位2.5%×近傍接近, eHMIと同じ発想）、②<b>接触は集団レベルの裏取り</b>に使用、と設計を切替えた。</div>
+
+<section><h2>2. 何を・どう学習したか</h2>
+Dryadと<b>同一のNF構成・特徴レイアウト</b>（p(dfwd,dlat | 履歴・近傍・局所密度・密度分位・ID)）。＝転移実験⑩が定義できるように揃えてある。前触れ用は<b>proxy非該当ステップのみで学習した"正常群衆モデル"</b>。局所密度を3分位に離散化して刺激とする。</section>
+
+<section><h2>3. 結果</h2>
+<p><b>A1</b>：Flow NLL <b>0.67</b>（Gaussian 2.77）、<b>ECE=0.059</b>。</p>
+<p><b>A2/A4 前触れ</b>：ここがDryadと<b>逆</b>。急機動を0.6秒前に当てるAUROCは<b>サプライズ0.69</b>で、速度0.56・|横|0.57・密度0.44・前方ギャップ0.50を<b>すべて上回る</b>。<b>先行時間0.4秒</b>（正常基準+1σ超え）。</p>
+<p><b>C1</b>：ホライズンを延ばしてもAUROCは <b>0.73→0.71→0.69→0.68→0.65</b> と<b>なだらかに減衰</b>＝直前スパイクだけでなく本物の先行信号。</p>
+<p><b>A3 密度用量反応</b>：一方でproxy発生率は密度分位で <b>0.029→0.027→0.018</b> と<b>むしろ微減</b>。高密度では"詰まって"急機動が物理的に取りにくくなる（jamming）現実を反映。</p>
+<p><b>接触（集団検証）</b>：<code>contacts.csv</code>＝24名で総接触<b>502回</b>、平均<b>20.9回/人</b>・最大99回・平均<b>3.0回/分</b>。密群衆で接触が高頻度に起きること自体を裏づける（per-eventの位置合わせは不可のため集団統計として）。</p>
+<div class="two">
+<figure><img src="figures/lyon_leadtime.png" alt="A2 前触れ曲線"><figcaption>A2：急機動(t=0)前にサプライズが正常基準を越えて立ち上がる（先行0.4s）。</figcaption></figure>
+<figure><img src="figures/lyon_baselines.png" alt="A4 ベースライン対決"><figcaption>A4：サプライズが全幾何量を上回る（Dryadと逆）。</figcaption></figure>
+</div>
+<div class="two">
+<figure><img src="figures/lyon_horizon.png" alt="C1 ホライズン曲線"><figcaption>C1：なだらかな減衰＝本物の先行（急落＝直前スパイクのみ、ではない）。</figcaption></figure>
+<figure><img src="figures/lyon_doseresponse.png" alt="A3 用量反応"><figcaption>A3：proxy率は高密度でむしろ微減＝jamming。密度因果はDryadと対照的に弱い。</figcaption></figure>
+</div>
+<div class="two">
+<figure><img src="figures/lyon_map.png" alt="A5 サプライズ地図"><figcaption>A5：群衆空間の平均サプライズ地図。</figcaption></figure>
+<figure><img src="figures/lyon_calibration.png" alt="A1 校正"><figcaption>A1：校正曲線（ECE=0.059）。</figcaption></figure>
+</div>
+</section>
+
+<section><h2>4. 図の見方</h2>
+<b>前触れ曲線</b>＝橙が青(正常基準)を越えた瞬間が先行検知の開始。<b>ベースライン棒</b>＝ここではサプライズ(橙)が最上位。<b>ホライズン曲線</b>＝右に行っても大きく落ちない＝先行が本物。<b>用量反応</b>＝棒が右上がりでない＝密度で機動が増えるわけではない（jamming）。</section>
+
+<section><h2>5. 解釈と意味・使い道</h2><div class="interp">
+密群衆では<b>尤度サプライズが"急な機動"の最良の先行指標（AUROC0.69・0.4秒前）</b>で、幾何量を上回る。これはeHMIの危険予兆と同じ挙動で、Dryadの"日常回避では効かない"と<b>ちょうど裏表</b>。統一仮説＝<b>「サプライズは"異常・反射的な機動"の前触れ。ルーティンな予期的回避には効かず、そこでは密度の因果レンズ（Dryad）が製品」</b>。用途は雑踏警備の<b>先行アラーム</b>（急機動の予兆検知）。ただし密度因果はjammingで非単調なので、"密度→危険"の単純外挿は誤り、という設計上の注意も同時に示す。per-eventの実接触ラベル整備が次段。
+</div></section>
+<p class="sub" style="margin-top:2rem">条件付き Normalizing Flow（zuko NSF）で自動生成。データ: Dense Crowd Dynamics (Fête des Lumières), Zenodo 13830435 / Nature Sci Data 2025。</p>
+</body></html>

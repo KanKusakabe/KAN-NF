@@ -1,0 +1,72 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>⑧ 歩行者の回避を尤度で読む（Dryad 交錯歩行） · KAN-NF 応用</title>
+<style>
+:root{--acc:#c2410c;--acc2:#d97757;--ink:#222;--mut:#666;--bg:#faf8f5}
+*{box-sizing:border-box}
+body{font:16px/1.75 -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);
+ max-width:960px;margin:0 auto;padding:2rem 1rem}
+a{color:var(--acc)}
+h1{line-height:1.35;margin:.2rem 0}
+.sub{color:var(--mut)}
+.crumb{font-size:.9rem;margin-bottom:1rem}
+.kpis{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.2rem 0}
+.kpi{background:#f5f3f0;border-radius:12px;padding:.7rem 1rem;min-width:120px}
+.kpi b{display:block;font-size:1.5rem;color:var(--acc)}
+.kpi span{font-size:.8rem;color:var(--mut)}
+section{margin:2rem 0}
+h2{border-left:5px solid var(--acc2);padding-left:.6rem;font-size:1.25rem}
+figure{margin:1.4rem 0}
+img{width:100%;border:1px solid #e5e5e5;border-radius:10px;background:#fff}
+figcaption{color:#555;margin-top:.4rem;font-size:.92rem}
+.interp{background:var(--bg);border-left:3px solid var(--acc2);padding:.8rem 1rem;border-radius:0 8px 8px 0}
+code{background:#f0eee9;padding:.1rem .35rem;border-radius:4px}
+table{border-collapse:collapse;width:100%;margin:1rem 0}
+th,td{border:1px solid #e5e5e5;padding:.4rem .6rem;text-align:left;font-size:.94rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+</style></head><body>
+<div class="crumb"><a href="index.html">&larr; KAN-NF 応用（尤度を製品にする） トップ</a></div>
+<h1>⑧ 歩行者の回避を尤度で読む（Dryad 交錯歩行）</h1>
+<p class="sub">条件付きNFで歩行者の"いつもの動き"を学習。回避（人手ラベル）が起きる文脈を、較正確率・反実（混雑）・前触れ・幾何量との対決で多角的に読む。</p>
+<div class="kpis">
+<div class="kpi"><b>0.036</b><span>校正ECE</span></div>
+<div class="kpi"><b>+6.3pp</b><span>反実ΔP(混雑→回避)</span></div>
+<div class="kpi"><b>0.73</b><span>前方ギャップAUROC</span></div>
+<div class="kpi"><b>0.56</b><span>サプライズAUROC</span></div>
+</div>
+
+<section><h2>1. このデータは何か</h2>
+<b>Dryad「交錯歩行の回避軌跡」</b>（Wuhan Univ. of Technology, 40人, 10m×10m, 俯瞰25fps, PeTrack頭部追跡）。赤帽(RP)が対角に横断し、黄帽(YP)の往復流を縫って歩く。<b>刺激＝密度3水準</b>（低/中/高＝Exp1/2/3, 各3反復＝9試行）。RPの各時刻に<b>回避戦略が人手ラベル</b>（NWS通常 / A加速 / D減速 / T迂回 / S停止）。10Hzに再標本化し、RP <b>90人・10,841ステップ</b>を対象（YPは近傍文脈に使用）。座標cm→m。</section>
+
+<section><h2>2. 何を・どう学習したか</h2>
+条件付き <b>Normalizing Flow</b>（zuko NSF＋GRU履歴）で <b>p(次の自己中心移動 dfwd,dlat | 履歴・近傍k人の相対配置・局所密度・密度水準・個人ID)</b> を学習。<b>サプライズ = −log p</b>。前触れ用には<b>通常歩行(NWS)だけで学習した"正常モデル"</b>を別に用意（eHMI流：正常で学習→逸脱を検知）。学習/検証はRP個人単位で分割（密度層別、リーク防止）。</section>
+
+<section><h2>3. 結果</h2>
+<p><b>A1 生成・較正</b>：held-out で Flow NLL <b>0.39</b>（Gaussian 2.73 / 等速 3.03 を大きく凌駕）、<b>ECE=0.036</b>で確率は信用できる。</p>
+<p><b>A3 反実（混雑）</b>：同じ局所文脈で密度水準を低→高に差し替えると回避確率が平均 <b>+6.3pp</b>上がり、<b>|ΔP|&gt;5pp が42.5%</b>。生の回避率も密度で <b>0.25→0.34→0.41</b> と単調増。＝<b>混雑が回避を因果的に押し上げる</b>ことを校正確率で言える。</p>
+<p><b>A2/A4 前触れ対決</b>：ここが重要な発見。回避の0.6秒前を当てるAUROCは、<b>サプライズ0.56</b>に対し<b>前方ギャップ(−front_gap)0.73</b>・最近傍距離0.62の方が高い。つまり<b>この"日常的な回避"は幾何量でよく予測でき、尤度サプライズはほとんど先行しない</b>（lead time 検出されず）。</p>
+<div class="two">
+<figure><img src="figures/dryad_calibration.png" alt="A1 校正曲線"><figcaption>A1 校正：名目区間 vs 実測被覆（対角線＝完全校正、ECE=0.036）。</figcaption></figure>
+<figure><img src="figures/dryad_counterfactual.png" alt="A3 反実 ΔP 分布"><figcaption>A3 反実：密度 高−低 で回避確率ΔPの分布。平均+6.3pp、裾に効く場面。</figcaption></figure>
+</div>
+<div class="two">
+<figure><img src="figures/dryad_baselines.png" alt="A4 ベースライン対決"><figcaption>A4：回避を0.6秒前に当てる単一指標AUROC。前方ギャップ＞最近傍＞サプライズ。</figcaption></figure>
+<figure><img src="figures/dryad_leadtime.png" alt="A2 前触れ曲線"><figcaption>A2：回避開始(t=0)に揃えたサプライズ。開始"時"は跳ねるが、開始"前"はNWS基準を越えない＝先行しない。</figcaption></figure>
+</div>
+<div class="two">
+<figure><img src="figures/dryad_map.png" alt="A5 サプライズ空間地図"><figcaption>A5：10m×10m上の平均サプライズ。交錯の中心域で高い。</figcaption></figure>
+<figure><img src="figures/dryad_horizon.png" alt="C1 ホライズン曲線"><figcaption>C1：ホライズンを延ばすとAUROCは0.60→0.55へ。短距離の弱い信号のみ。</figcaption></figure>
+</div>
+</section>
+
+<section><h2>4. 図の見方</h2>
+<b>校正</b>＝点が対角線に乗るほど確率が正直。<b>反実ΔP</b>＝0付近は密度で変わらない場面、正の裾は混雑が回避を強める場面。<b>ベースライン棒</b>＝0.5が当てずっぽう、前方ギャップが最も高い。<b>前触れ曲線</b>＝縦線t=0が回避開始。開始前に橙線が青(NWS基準)を越えれば先行検知だが、ここでは越えない。</section>
+
+<section><h2>5. 解釈と意味・使い道</h2><div class="interp">
+この応用の収穫は<b>二つで、片方は"効き"、片方は"効かない"を正直に示す</b>点にある。<br>
+<b>効く＝因果</b>：較正確率＋反実で「<b>混雑は回避を+6.3pp押し上げる</b>」と数字で言える。歩行空間設計・混雑管理・群集流の評価に使える。<br>
+<b>効かない＝前触れ</b>：eHMIの危険（急な回避）ではサプライズが先行したのに、<b>Dryadの"合理的な回避"は尤度サプライズでは予知しにくく、前方ギャップの縮小という幾何量が最良の先行指標</b>だった。これは失敗ではなく<b>境界の発見</b>で、「サプライズは"異常な反射的機動"の前触れであって、"当然の予期的回避"の前触れではない」という仮説を生む。この仮説は姉妹ページ <a href="lyon_crowd.html">⑨ 密群衆(Lyon)</a> と <a href="crowd_transfer.html">⑩ データ間転移</a> で検証する。
+</div></section>
+<p class="sub" style="margin-top:2rem">条件付き Normalizing Flow（zuko NSF）で自動生成。NF×生活データ探索シリーズの一部。データ: Liu et al., Dryad doi:10.5061/dryad.c2fqz619v。</p>
+</body></html>
