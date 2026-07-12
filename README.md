@@ -29,6 +29,12 @@
 | [HoloAssist-NF](https://kankusakabe.github.io/HoloAssist-NF/) | 手順の逐次 | 介入予兆 AUC≈0.57 |
 | [AI2-THOR-RoomR](https://kankusakabe.github.io/AI2-THOR-RoomR/) | シミュ配置 | 移動物検出 AUC=0.94 |
 
+### 離散 × 連続 の対（失敗の事前検知＋反事実推奨で向く密度モデルは信号次第）
+| プロジェクト | データ | 主な結果 |
+|---|---|---|
+| [Assembly101-NF](https://kankusakabe.github.io/Assembly101-NF/) | 玩具組立の離散手順（順序・トークン） | ミス検知 AUROC 0.80(自己回帰)/0.84(遷移カウント)・連続NFは0.63／反実 top-5 0.34 |
+| [CaptainCook4D-NF](https://kankusakabe.github.io/CaptainCook4D-NF/) | 調理の連続実行ペース | held-out NLL Flow 1.43 vs ガウス混合 2.24／誤り検知 録画0.71・ステップ0.59／最小修正の反実 |
+
 ### 逆設計・空間 × 見守り（尤度を設計目的関数に／長期の“普通”）
 | プロジェクト | データ | 主な結果 |
 |---|---|---|

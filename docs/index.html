@@ -169,6 +169,28 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
 
 </div>
 
+<h2>離散 × 連続 の対 <span class="n">— 失敗の事前検知と反事実推奨で、向く密度モデルは信号次第</span></h2>
+<p class="sub" style="margin:.3rem 0 0">
+同じ2つの目的（<b>失敗の事前検知</b>＝低尤度／<b>反事実で次の手を推奨</b>）を、手順の<b>離散（順序・トークン）</b>と
+<b>連続（実行ペース）</b>で解いた対。<b>どの密度モデルが向くかは信号が離散か連続かで変わる</b>ことを、差として報告する。</p>
+<div class="cards">
+
+  <a class="card" href="https://kankusakabe.github.io/Assembly101-NF/">
+    <h3>Assembly101-NF <span class="n">— 離散</span></h3>
+    <p>玩具組立の「次の手」を <b>離散尤度</b> で。順序・位置ミスを検知し、<b>correction を反事実</b>として推奨。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">離散手順</span><span class="tag">反実</span><span class="tag">対:連続</span></div>
+    <div class="metric">ミス検知 AUROC 自己回帰 <b>0.80</b>／遷移カウント 0.84／同トークンに連続NFは0.63・その差 −0.17〜0.21／反実 top-5 0.34</div>
+  </a>
+
+  <a class="card" href="https://kankusakabe.github.io/CaptainCook4D-NF/">
+    <h3>CaptainCook4D-NF <span class="n">— 連続</span></h3>
+    <p>調理の「実行ペース」を <b>連続密度</b> で。ペース系の誤りを検知し、<b>最小修正のペース</b>を反事実として出す。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">連続ペース</span><span class="tag">反実</span><span class="tag">対:離散</span></div>
+    <div class="metric">held-out NLL Flow <b>1.43</b> vs ガウス混合 2.24（差 −0.81・連続なので比較可）／誤り検知 録画 0.71・ステップ 0.59</div>
+  </a>
+
+</div>
+
 <!--APPS-START-->
 <h2>応用 <span class="n">— 尤度を製品にする（責任・認証・前触れ・逆設計・手順失敗）</span></h2>
 <p class="sub" style="margin:.3rem 0 0">
