@@ -148,6 +148,13 @@ NFが光るのは「低次元・連続・多峰の条件付き密度で、<b>サ
     <div class="metric">配置検出 <b>AUC 0.92</b>（未知シーンでも 0.84）／“未来軌跡”では鈍感→アフォーダンスに定式化変更で解決</div>
   </a>
 
+  <a class="card" href="https://kankusakabe.github.io/LocoVR-NF/">
+    <h3>LocoVR-NF <span class="n">— 実住宅・多層</span></h3>
+    <p>実住宅の目的志向歩行（LocoVR/LocoReal）→ <b>p(居場所｜占有)</b> で実家具配置を採点し、目的地条件の軌跡フローで<b>再設計</b>をシミュレート（Layout-NFの実データ版）。さらに<b>環境層×行動層を同じ空間で縦積み</b>する多層NF拡張（ページ内から辿れる）を収録。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag win">実住宅131で汎化</span><span class="tag">多層NF</span><span class="tag">逆設計</span></div>
+    <div class="metric">未知住宅の家具検出 <b>AUC 0.65→0.87</b>（住宅数で上昇）／生成経路 minADE <b>0.39m</b>（A* 0.68・直線 0.81 より小）／多層: 後付け環境層で家具重なり <b>23%減</b>・粗フロー尤度が大域経路を回復（実経路上位 16%→82%）</div>
+  </a>
+
   <a class="card" href="https://kankusakabe.github.io/CASAS-NF/">
     <h3>CASAS-NF</h3>
     <p>在宅センサ列（CASAS）→ <b>SURPRISE=−log p</b> で認知・エラー・生活ドリフトを教師なし検出。個人化がいつ効くかを定量化。</p>

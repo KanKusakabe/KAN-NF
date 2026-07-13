@@ -39,6 +39,7 @@
 | プロジェクト | データ | 主な結果 |
 |---|---|---|
 | [Layout-NF](https://kankusakabe.github.io/Layout-NF/) | TRUMANS 室内動作+占有グリッド | 配置検出 AUC0.92(未知シーン0.84)／家具の逆設計・反実 |
+| [LocoVR-NF](https://kankusakabe.github.io/LocoVR-NF/)（実データ版・[多層NF](https://kankusakabe.github.io/LocoVR-NF/multilayer.html)） | LocoVR/LocoReal 実住宅の目的志向歩行 | 未知住宅の家具検出 AUC0.65→0.87／生成経路 minADE0.39m／多層: 後付け環境層で家具重なり23%減・粗フロー尤度が大域経路を回復(実経路上位16%→82%) |
 | [CASAS-NF](https://kankusakabe.github.io/CASAS-NF/) | CASAS 在宅センサ列 | 17ヶ月ドリフト／個人化モデルは~300日で集団平均モデルに追いつく（クロスオーバー） |
 
 ### 空間動線 × 逆設計（一般の人の動線が漏らす「望まれた構造」を尤度で読む）
