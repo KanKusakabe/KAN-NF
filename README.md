@@ -54,4 +54,9 @@
 |---|---|---|
 | [Crowd-NF](https://kankusakabe.github.io/Crowd-NF/) | Dryad 交錯歩行 / Lyon 光の祭典（〜4人/m²） | 混雑→回避+6.3pp（反実）／急機動の前触れ AUROC0.69（Lyon）／日常回避は幾何量が担い尤度は先行せず（Dryad） |
 
+### shared control × 逆問題（尤度で意図を復元し、歪んだ入力を射影）
+| プロジェクト | データ | 主な結果 |
+|---|---|---|
+| [Reach-SharedControl-NF](https://kankusakabe.github.io/Reach-SharedControl-NF/) | 3D-ARM-Gaze 健常20名リーチ（合成障害） | 健常priorのみ（Flow held-out NLL -10.78<GMM -10.62）／意図回復はNF≫識別分類器（drift 0.52 vs 0.17＠最大）／ドリフト終点 0.060→0.046m・過補助(Full-auto 0.36m)を確信度で回避／較正AUROC0.87／振戦・分断は終点が元々正しく射影は効かず（正直な限界） |
+
 ページ本体は `docs/index.html`。リンクを増やす時はここを編集。

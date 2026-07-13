@@ -272,6 +272,15 @@ NFの<b>校正された確率・微分・低尤度</b>を、娯楽でない高�
 </div>
 <!--APPS-END-->
 
+<h2>shared control × 逆問題 <span class="n">— 尤度で意図を復元し、歪んだ入力を prior へ射影する</span></h2>
+<div class="cards">
+  <a class="card" href="https://kankusakabe.github.io/Reach-SharedControl-NF/">
+    <h3>Reach-SharedControl-NF</h3>
+    <p>健常リーチのみで学ぶ目標条件付き Flow <code>q(v｜s,g)</code> を観測尤度に、震えた入力を <b>意図した目標へ射影</b>。<b>障害データで学習しない</b>のが主張。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">3D-ARM-Gaze</span><span class="tag">意図回復</span><span class="tag">射影</span></div>
+    <div class="metric">意図回復 NF≫識別分類器（drift <b>0.52 vs 0.17</b>＠最大）／ドリフト終点 0.060→<b>0.046m</b>・過補助(0.36m)を確信度で回避／較正AUROC<b>0.87</b>／振戦・分断は終点が元々正しく射影効かず（正直な限界）</div></a>
+</div>
+
 <footer>
 条件付き Normalizing Flow（zuko NSF）による人間データ探索の統括ページ。各カードは各プロジェクトの GitHub Pages、または応用ハブ内のページへのリンク。<br>
 自動生成 · KAN-NF
