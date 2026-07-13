@@ -58,5 +58,6 @@
 | プロジェクト | データ | 主な結果 |
 |---|---|---|
 | [Reach-SharedControl-NF](https://kankusakabe.github.io/Reach-SharedControl-NF/) | 3D-ARM-Gaze 健常20名リーチ（合成障害） | 健常priorのみ（Flow held-out NLL -10.78<GMM -10.62）／意図回復はNF≫識別分類器（drift 0.52 vs 0.17＠最大）／ドリフト終点 0.060→0.046m・過補助(Full-auto 0.36m)を確信度で回避／較正AUROC0.87／振戦・分断は終点が元々正しく射影は効かず（正直な限界） |
+| [ClinicalPrior-NF](https://kankusakabe.github.io/ClinicalPrior-NF/) | 実患者：歩行 gaitndd＋手書き UCI-395螺旋 | 健常priorを患者へ学習せず転移。検知は転移（歩行AUROC PD0.91/HD0.92/ALS0.91・手書き0.86）／だがFlow>GMMも意図回復もモダリティ依存＝実PD手書きでは射影がテンプレ吸着を上回らず（正直な負の結果）／音声TORGO等は登録制で未取得 |
 
 ページ本体は `docs/index.html`。リンクを増やす時はここを編集。

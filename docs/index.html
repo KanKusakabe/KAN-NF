@@ -279,6 +279,11 @@ NFの<b>校正された確率・微分・低尤度</b>を、娯楽でない高�
     <p>健常リーチのみで学ぶ目標条件付き Flow <code>q(v｜s,g)</code> を観測尤度に、震えた入力を <b>意図した目標へ射影</b>。<b>障害データで学習しない</b>のが主張。</p>
     <div class="tags"><span class="tag new">新規</span><span class="tag">3D-ARM-Gaze</span><span class="tag">意図回復</span><span class="tag">射影</span></div>
     <div class="metric">意図回復 NF≫識別分類器（drift <b>0.52 vs 0.17</b>＠最大）／ドリフト終点 0.060→<b>0.046m</b>・過補助(0.36m)を確信度で回避／較正AUROC<b>0.87</b>／振戦・分断は終点が元々正しく射影効かず（正直な限界）</div></a>
+  <a class="card" href="https://kankusakabe.github.io/ClinicalPrior-NF/">
+    <h3>ClinicalPrior-NF</h3>
+    <p>健常priorを<b>患者へ学習せず転移</b>できるか、手書き(UCI-395螺旋)・歩行(gaitndd)の実患者で検証。転移の境界を地図化。</p>
+    <div class="tags"><span class="tag new">新規</span><span class="tag">実患者</span><span class="tag">多モダリティ</span><span class="tag">正直な境界</span></div>
+    <div class="metric">検知は転移（歩行AUROC PD<b>0.91</b>/HD0.92/ALS0.91・手書き<b>0.86</b>）／だが Flow>GMM も意図回復もモダリティ依存＝実PD手書きでは射影がテンプレ吸着を上回らず（正直な負の結果）／音声は登録制で未取得</div></a>
 </div>
 
 <footer>
