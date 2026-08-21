@@ -1,0 +1,144 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>低速モビリティ × 群衆ナビ — 5本の結果まとめ（2026-08-26 ミーティング向け）</title>
+<style>
+:root{--acc:#c2410c;--acc2:#d97757;--ink:#222;--mut:#666;--bg:#faf8f5}
+*{box-sizing:border-box}
+body{font:16px/1.75 -apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--ink);
+ max-width:960px;margin:0 auto;padding:2rem 1rem}
+a{color:var(--acc)}
+h1{line-height:1.35;margin:.2rem 0;font-size:1.85rem}
+.sub{color:var(--mut)}
+section{margin:2.2rem 0}
+h2{border-left:5px solid var(--acc2);padding-left:.6rem;font-size:1.22rem}
+h3{font-size:1.02rem;margin:1.3rem 0 .3rem}
+.legend{background:var(--bg);border-left:3px solid var(--acc2);padding:.8rem 1rem;border-radius:0 8px 8px 0;font-size:.93rem}
+.find{background:#fdeecd;border-left:3px solid #d0a000;padding:.9rem 1.1rem;border-radius:0 8px 8px 0}
+.warn{background:#f3f1ec;border-left:3px solid #999;padding:.9rem 1.1rem;border-radius:0 8px 8px 0;font-size:.92rem}
+table{border-collapse:collapse;width:100%;font-size:.88rem;margin:.6rem 0}
+th,td{border:1px solid #e5e5e5;padding:.45rem .6rem;text-align:left;vertical-align:top}
+th{background:var(--bg);color:#444;font-weight:600}
+code{background:#f0eee9;padding:.1rem .35rem;border-radius:4px}
+footer{color:var(--mut);font-size:.85rem;margin-top:3rem;border-top:1px solid #eee;padding-top:1rem}
+</style></head><body>
+
+<h1>低速モビリティ × 群衆ナビゲーション — 5本の結果</h1>
+<p class="sub">Notion「関連研究まとめ ― 2026-08-26 ミーティング向け」の TODO
+「良さそうなアルゴリズムの提示」に対して、候補を挙げるのではなく
+<b>実際に実装して測った</b>結果。データは実機ログ（CrowdBot_v2, Qolo）と
+公開歩行者データ（ETH/UCY）、および専用シミュレーション。</p>
+
+<div class="legend">
+本ページは各プロジェクトの要約。数値・図・限界は各ページに、コードと生データは各リポジトリにある。
+<b>4本が否定的結果、1本が肯定的結果</b>で、その組み合わせ自体が結論になっている。
+</div>
+
+<section>
+<h2>いちばん短い結論</h2>
+<div class="find">
+<p><b>1. 「もっとよく見れば立ち往生を先読みできる」は成り立たなかった。</b>
+群衆密度も、5種類の予測不確実性表現も、機体自身のプランナのコストも、
+「いつ止まるか」を偶然より良くは当てられない。</p>
+<p><b>2. その原因は予測器ではなく、問題の立て方にある。</b>
+ログからは「止まっていた」ことしか分からず、目的地到着・意図した一時停止・
+操縦者の介入・本来の立ち往生が1つのラベルに混ざっている。
+<b>止まった理由を機体側に記録させることが、より良い予測器より先に来る。</b></p>
+<p><b>3. 一方で、予測を必要としない打ち手は実在した。</b>
+「行きたい方向へ進む集団に付いていく」ための流れは
+<b>約3分の2の瞬間に存在</b>し、しかも<b>混雑するほど増える</b>——
+つまり立ち往生が起きる帯でこそ使える。</p>
+<p><b>4. 立ち往生と急な動きは同じダイヤルの両端だった。</b>
+密度を揃えて比べると、自律制御は最も滑らかだが最もよく止まり、
+手動は最も荒いがよく動く。試乗の「停止が急」を議論するときは、
+この trade-off のどこに置くかという話になる。</p>
+</div>
+</section>
+
+<section>
+<h2>5本の要約</h2>
+<table>
+<tr><th>プロジェクト</th><th>問い</th><th>結果</th></tr>
+
+<tr><td><a href="https://kankusakabe.github.io/CrowdBot-Freeze/"><b>CrowdBot-Freeze</b></a><br>
+<span class="sub">実機ログ 24.9分／3セッション</span></td>
+<td>実機は実際どれくらい立ち往生し、それは混雑のせいか？</td>
+<td>走行時間の <b>13%</b> が停止（毎分1.92回）。<b>密度は「いつ止まるか」を予測しない</b>
+（走行内 r=−0.05、±6秒ずらしても構造なし）。密度を揃えると
+<b>自律は最も滑らかだが最もよく止まり、手動は最も荒いがよく動く</b>
+（ジャーク超過 0.52 vs 0.77、不快域の減速 0.005 vs 0.069）。</td></tr>
+
+<tr><td><a href="https://kankusakabe.github.io/Freeze-Foresight/"><b>Freeze-Foresight</b></a><br>
+<span class="sub">同じ実機ログ・244,908サンプル</span></td>
+<td>密度が当てないなら、予測の不確実性なら当てられるか？</td>
+<td>等速度／MLPガウス／GMM／深層アンサンブル／正規化フローの5表現とも
+<b>偶然と区別できない</b>（最良 0.491±0.048、0.5=偶然）。
+全特徴量の結合モデルは <b>0.36–0.45 と偶然を下回る</b>（録画をまたいで関係が反転）。
+<b>プランナ自身のコストも 0.465±0.029</b>。</td></tr>
+
+<tr><td><a href="https://kankusakabe.github.io/Flow-Ride/"><b>Flow-Ride</b></a><br>
+<span class="sub">実機24k瞬間＋ETH/UCY 33k瞬間</span></td>
+<td>「群衆の流れに乗る」は、そもそもどれだけ使える場面があるのか？</td>
+<td>θ=45°・2人以上で <b>機体視点 0.67±0.07 ／ 歩行者視点 0.61±0.06</b>（2コーパス一致）。
+乗る代償は平均 <b>26°</b> のずれ。<b>密度とともに 0.22→0.97 に上昇</b>＝
+立ち往生の起きる帯でこそ使える。しかも<b>予測を必要としない</b>。</td></tr>
+
+<tr><td><a href="https://kankusakabe.github.io/Wheelchair-Wake/"><b>Wheelchair-Wake</b></a><br>
+<span class="sub">同一人物 458人の near/far 比較</span></td>
+<td>車椅子型モビリティの周りで、人の動きは本当に変わるのか？</td>
+<td>素の速度差 <b>−0.056 m/s</b>（−5.9%、CIが0を除外）は明確だが、
+局所密度の変化を揃えると <b>−0.018 m/s</b> に縮み CI が 0 をまたぐ＝<b>約7割が混雑由来</b>。
+運動学レベルでは<b>「車椅子専用の歩行者モデル」を作る動機は出ない</b>。</td></tr>
+
+<tr><td><a href="https://kankusakabe.github.io/Unfreeze-Nudge/"><b>Unfreeze-Nudge</b></a><br>
+<span class="sub">シミュレーション・6方策×2シナリオ</span></td>
+<td>意図の不確実性を「止まる理由」でなく「進む方向」に使えるか？</td>
+<td>情報利得の重みを 0→2.0 と振っても全指標が動かない＝<b>能動探索は効かない</b>。
+効いたのは「最悪ケースを仮定しないこと」。
+既存研究の主流である<b>「不確実→減速」だけが立ち往生する</b>が、
+余裕を揃えると差は消え、正体は<b>実効マージンが不透明に膨らむこと</b>だった。</td></tr>
+</table>
+</section>
+
+<section>
+<h2>ミーティングで出せる具体的な問い</h2>
+<ol>
+<li><b>止まった理由はログに残っていますか？</b> 実行不能判定・安全層の発火・
+操縦者の介入・目的地到達が区別できるか。区別できないと、
+立ち往生を減らす取り組みの効果測定自体ができない（Freeze-Foresight の含意）。</li>
+<li><b>いまの制御は trade-off のどこに置かれていますか？</b>
+実機データでは自律は「穏やかだが止まる」側にある。
+試乗の「停止が急」は、稀な急ブレーキより<b>常時の細かいガタつき</b>として出ている可能性が高い
+（自律のジャーク超過率は密度によらずほぼ一定）。</li>
+<li><b>群衆流同調は検討されていますか？</b> 前提条件は約3分の2の瞬間で満たされ、
+混雑するほど満たされやすい。予測器を必要としないので、
+予測が効かないという上の結果とも矛盾しない。</li>
+<li><b>歩行者予測モデルに車椅子専用の条件付けは要りますか？</b>
+運動学レベルでは要らなさそう。差を探すなら
+<b>誰が先に譲るかという意思決定レベル</b>を見る必要がある。</li>
+<li><b>不確実性を安全マージンに結びつけていませんか？</b>
+その設計は「設定した r と実際の挙動が対応しなくなる」形で効いてくる
+（r=0.9 のつもりが r≈1.3 相当で走る）。</li>
+</ol>
+</section>
+
+<section>
+<h2>全体に共通する限界</h2>
+<div class="warn">
+<ul>
+<li><b>Qolo は WHILL ではない。</b>立位型で制御則も異なり、共有制御・手動セッションを含む。
+屋外の市場であり空港の屋内コンコースではない。
+<b>絶対値を移植せず、密度に対する相対的な形として読むべき。</b></li>
+<li><b>実走 24.9 分・3セッションのみ</b>で、密度・日・制御方式がなお交絡している。</li>
+<li><b>Unfreeze-Nudge はシミュレーションのみ</b>で、歩行者の反応モデルは手で設計している
+（そのため最も結論を左右する2定数は固定せず振ってある）。</li>
+<li><b>乗り心地の主観評価は含まれない。</b>参照した閾値は他研究の値。</li>
+</ul>
+</div>
+</section>
+
+<footer>
+KAN-NF 低速モビリティ × 群衆ナビゲーション シリーズ（2026-08-22）。
+各ページに数値・図・再現手順、各リポジトリにコードと結果 JSON。
+<a href="index.html">← KAN-NF ハブ</a>
+</footer>
+</body></html>
