@@ -264,9 +264,9 @@ NFに限らず<b>問いごとに適した密度・信念モデルを選び</b>�
   </a>
   <a class="card" href="https://kankusakabe.github.io/Freeze-Foresight/">
     <h3>Freeze-Foresight <span class="n">— ネガティブ結果</span></h3>
-    <p>「密度が当てないなら<b>予測の不確実性</b>なら当てられるか」を、等速度／MLPガウス／GMM／深層アンサンブル／正規化フローの5表現で同じ土俵に載せて検証。実機ログ・録画単位CV・走行中フレームのみ採点。</p>
-    <div class="tags"><span class="tag">実機ログ</span><span class="tag">表現の比較</span><span class="tag">ネガティブ結果</span><span class="tag">較正</span></div>
-    <div class="metric">1秒先の停止 AUROC は最良でも <b>0.491 ± 0.048</b>（0.5=偶然）で、95%区間が0.5を超える特徴量は<b>皆無</b>／全特徴量の結合モデルは <b>0.36–0.46</b> と偶然を下回る（＝関係が録画をまたいで反転）／当てはまり最良の GMM（NLL −2.57）と最悪の等速度（−1.68）で警報性能に差が無い</div>
+    <p>「密度が当てないなら<b>予測の不確実性</b>なら当てられるか」を5表現（等速度／MLPガウス／GMM／深層アンサンブル／NSF）で同じ土俵に載せ、さらに<b>プランナ自身の内部コスト</b>まで同じ枠組みで採点した。実機ログ・録画単位CV・走行中フレームのみ。</p>
+    <div class="tags"><span class="tag">実機ログ</span><span class="tag">表現の比較</span><span class="tag">ネガティブ結果</span><span class="tag">問題の立て方</span></div>
+    <div class="metric">1秒先の停止 AUROC は最良 <b>0.491 ± 0.048</b>（0.5=偶然）で95%区間が0.5を超える特徴量は皆無／<b>プランナのtop-1コストも 0.465 ± 0.029</b>＝内部にあるという説明も不支持／結合モデルは0.36–0.45と偶然を下回る（録画をまたいで関係が反転）／含意＝<b>予測器より先に「止まった理由」の記録が要る</b></div>
   </a>
 </div>
 <!--WHILL-END-->
