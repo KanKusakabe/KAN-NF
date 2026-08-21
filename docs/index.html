@@ -268,6 +268,12 @@ NFに限らず<b>問いごとに適した密度・信念モデルを選び</b>�
     <div class="tags"><span class="tag">実機ログ</span><span class="tag">表現の比較</span><span class="tag">ネガティブ結果</span><span class="tag">問題の立て方</span></div>
     <div class="metric">1秒先の停止 AUROC は最良 <b>0.491 ± 0.048</b>（0.5=偶然）で95%区間が0.5を超える特徴量は皆無／<b>プランナのtop-1コストも 0.465 ± 0.029</b>＝内部にあるという説明も不支持／結合モデルは0.36–0.45と偶然を下回る（録画をまたいで関係が反転）／含意＝<b>予測器より先に「止まった理由」の記録が要る</b></div>
   </a>
+  <a class="card" href="https://kankusakabe.github.io/Wheelchair-Wake/">
+    <h3>Wheelchair-Wake <span class="n">— 前提の検証</span></h3>
+    <p>「周囲の歩行者が車椅子に速度を合わせ、追い越しが減る」という前提を、<b>同じ群衆・同じ分・同じセンサ</b>の中で各歩行者の「機体の近くにいた自分 vs 遠くにいた自分」を比べて検証。一人が自分自身の対照になる設計。</p>
+    <div class="tags"><span class="tag">実機ログ</span><span class="tag">同一人物比較</span><span class="tag">交絡の統制</span><span class="tag">前提の否定</span></div>
+    <div class="metric">素の速度差 <b>−0.056 m/s</b>（遠方 0.95 m/s に対し −5.9%、95%CI が0を除外）は明確だが、局所密度の変化を揃えると <b>−0.018 m/s</b> まで縮み CI が 0 をまたぐ＝<b>約7割が混雑由来</b>／運動学レベルでは「車椅子専用の歩行者モデル」を作る動機は出ない</div>
+  </a>
 </div>
 <!--WHILL-END-->
 
